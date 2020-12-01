@@ -77,7 +77,7 @@ struct DBConfig_GetValues {
 	int count;
 
 };
-wbool DBConfig_GetValues_next(w_iterator *it, void *obj) {
+wresult DBConfig_GetValues_next(w_iterator *it, void *obj) {
 	DBConfig_GetValues *vi = (DBConfig_GetValues*) it;
 
 }
@@ -157,7 +157,7 @@ struct DBConfig_GetChildren {
 	struct _w_iterator_class *clazz;
 
 };
-wbool DBConfig_GetChildren_next(w_iterator *it, void *obj) {
+wresult DBConfig_GetChildren_next(w_iterator *it, void *obj) {
 
 }
 wresult DBConfig_GetChildren_reset(w_iterator *it) {
@@ -329,7 +329,7 @@ int DBConfigValue::_GetSize() {
 		break;
 	case W_VALUE_POINTER:
 	case W_VALUE_STRING_REF:
-	case W_VALUE_STRING: {
+	case W_VALUE_UTF8: {
 		if (this->header.value != 0) {
 			if (this->size == 0) {
 				ret = this->parent->manager->SeekRead(this->header.value, &sz,

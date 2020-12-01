@@ -7,5 +7,5 @@
 
 #ifndef ICODE_ZLIB_ZLIB_H_
 #define ICODE_ZLIB_ZLIB_H_
-#include "../../icode/resources/zlib.h"
+#include "../../include/resources/zlib.h"
 #endif /* ICODE_ZLIB_ZLIB_H_ */
