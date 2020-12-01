@@ -7,7 +7,7 @@
 
 #ifndef ICODE_INCLUDE_CORE_DEFS_H_
 #define ICODE_INCLUDE_CORE_DEFS_H_
-#include "../../swtp/swtp.h"
+#include "../../../swt/swtp.h"
 #ifdef ICODEBUILD
 #define ICODE_PUBLIC DLL_EXPORT
 #else

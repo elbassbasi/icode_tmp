@@ -12,7 +12,7 @@ typedef unsigned int DBPage;
 class DB {
 private:
 	WFile file;
-	WMutexBase lock;
+	WLock lock;
 	DBPage end_pos;
 	DBPage rm_list;
 	DBPage root;

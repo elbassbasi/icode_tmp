@@ -28,7 +28,7 @@ Managers::~Managers() {
 }
 
 bool Managers::Init() {
-	if (app.app.argc <= 0)
+	if (app.argc <= 0)
 		return 0;
 	if (!InitPath()) {
 		return false;
@@ -48,14 +48,14 @@ int Managers::ManagersStart(int argc, char **argv) {
 }
 
 const char** Managers::GetCommandLine(int &argc) {
-	argc = this->app.app.argc;
-	return (const char**) this->app.app.argv;
+	argc = this->app.argc;
+	return (const char**) this->app.argv;
 }
 /**
  * path
  */
 bool Managers::InitPath() {
-	char *s = app.app.argv[0];
+	char *s = app.argv[0];
 	int i = 0, last0 = 0, last1 = 0;
 	while (s[i] != 0) {
 		if (s[i] == '/' || s[i] == '\\') {
@@ -67,7 +67,7 @@ bool Managers::InitPath() {
 	this->currentPath = (char*) malloc(last1 + 1);
 	if (this->currentPath == 0)
 		return false;
-	memcpy(this->currentPath, app.app.argv[0], last1);
+	memcpy(this->currentPath, app.argv[0], last1);
 	this->currentPath[last1] = 0;
 	for (int i = 0; i < last1; i++) {
 		if (this->currentPath[i] == '\\')

@@ -1,16 +1,11 @@
 /*
  * icode.h
  *
- *  Created on: 16 mai 2020
- *      Author: Azeddine El Bassbasi
+ *  Created on: 1 déc. 2020
+ *      Author: azeddine
  */
 
-#ifndef ICODE_INCLUDE_ICODE_H_
-#define ICODE_INCLUDE_ICODE_H_
-#include "core/core.h"
-#include "runtime/runtime.h"
-#include "resources/resources.h"
-#include "text/text.h"
-#include "ui/ui.h"
-
-#endif /* ICODE_INCLUDE_ICODE_H_ */
+#ifndef ICODE_ICODE_H_
+#define ICODE_ICODE_H_
+#include "include/icode.h"
+#endif /* ICODE_ICODE_H_ */

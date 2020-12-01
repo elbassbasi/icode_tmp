@@ -1,3 +1,4 @@
+file(GLOB src_swtp "../swt/src_swtp/*.cpp")
 file(GLOB src_icode_core "src/core/*.cpp")
 file(GLOB src_icode_model "src/model/*.cpp")
 file(GLOB src_icode_text "src/text/*.cpp")
@@ -14,7 +15,7 @@ target_include_directories(icode PRIVATE .)
 target_compile_definitions(icode PRIVATE ICODEBUILD)
 #target_link_directories(icode PRIVATE ${CMAKE_BINARY_DIR}/bin/plugins)
 #link_directories(${PROJECT_BINARY_DIR}/plugins)
-target_link_libraries(icode PRIVATE swt swtp)
+target_link_libraries(icode PRIVATE swt)
 
 
  add_custom_target(icode-copy-files ALL
