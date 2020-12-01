@@ -1,0 +1,3 @@
+[submodule "swt"]
+	path = swt
+	url = https://github.com/elbassbasi/swt.git
