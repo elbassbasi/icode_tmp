@@ -64,9 +64,9 @@ public:
 	ICommand* FindCommand(const char *id);
 public:
 	int Start();
-	void StartPlugins();
-	void AttachPlugins();
-	void LoadPlugins();
+	void StartPlugins(IProgressMonitor* progress);
+	void AttachPlugins(IProgressMonitor* progress);
+	void LoadPlugins(IProgressMonitor* progress);
 	int Exit();
 };
 

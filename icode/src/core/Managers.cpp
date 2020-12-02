@@ -6,7 +6,7 @@
  */
 
 #include "Managers.h"
-#include "Splash.h"
+#include "../model/Splash.h"
 #include <new>
 extern "C" {
 IManagers* IManagersGet() {
@@ -188,7 +188,14 @@ Plugin* Managers::LoadPlugin0(w_module *module, const char *name,
 extern "C" {
 ICODE_PUBLIC Plugin* ICodeCreatePlugin();
 }
-void Managers::LoadPlugins() {
+void Managers::LoadPlugins(IProgressMonitor *progress) {
+	IProgressMonitorTask *task = 0;
+	if (progress != 0) {
+		task = progress->CreateTask(0);
+	}
+	if (task != 0) {
+		task->SetText("loading plugins : %s", "icode");
+	}
 	LoadPlugin0(0, "icode", ICodeCreatePlugin);
 	char name[0x100];
 	size_t length = strlen(this->GetCurrentPath());
@@ -221,10 +228,17 @@ void Managers::LoadPlugins() {
 						memcpy(name, find.name, l - ext_length);
 						name[l - ext_length] = 0;
 					}
+					if (task != 0) {
+						task->SetText("loading plugins : %s", find.name);
+					}
 					LoadPlugin0(module, name, createfunction);
 				}
 			}
 		}
+	}
+	if (task != 0) {
+		task->SetText("loading plugins : %s", "terminé");
+		task->Close();
 	}
 	free(s);
 }
@@ -239,14 +253,14 @@ int Managers::FindImage(const char *name) {
 	return -1;
 }
 
-void Managers::StartPlugins() {
+void Managers::StartPlugins(IProgressMonitor *progress) {
 	Plugin *plugin = plugins;
 	while (plugin != 0) {
 		plugin->OnStart();
 		plugin = plugin->data.next;
 	}
 }
-void Managers::AttachPlugins() {
+void Managers::AttachPlugins(IProgressMonitor *progress) {
 	Plugin *plugin = plugins;
 	while (plugin != 0) {
 		plugin->OnAttach();

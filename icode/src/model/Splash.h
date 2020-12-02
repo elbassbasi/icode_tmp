@@ -8,7 +8,10 @@
 #ifndef SRC_ICODE_UI_SPLASH_H_
 #define SRC_ICODE_UI_SPLASH_H_
 #include "../icode.h"
-class Splash: public WShell, public IWRunnable {
+class Splash: public WShell,
+		public IWRunnable,
+		public IProgressMonitor,
+		public IProgressMonitorTask {
 public:
 	WThread backgroundThread;
 	//WImage image;
@@ -27,13 +30,27 @@ public:
 	~Splash();
 	void Create();
 	void LoadPlugins();
-	void UpdateLabelText(const char *format, ...);
 protected:
 	bool OnPaint(WPaintEvent &e);
 	void OnUpdate();
 	void _Update();
-	bool OnTimer(WTimerEvent& e);
+	bool OnTimer(WTimerEvent &e);
 	void Run();
+public:
+	//IProgressMonitorTask
+	void Close();
+	int GetTotal();
+	WString GetText();
+	bool IsCanceled();
+	void SetCanceled(bool value);
+	void SetTotal(int total);
+	void SetText(const char *format,...);
+	void Worked(int work);
+public:
+	//IProgressMonitor
+	IProgressMonitorTask* CreateTask(IProgressMonitorTask *parentTask);
+	bool IsCanceledAll();
+	void SetCanceledAll(bool value);
 };
 
 #endif /* SRC_ICODE_UI_SPLASH_H_ */

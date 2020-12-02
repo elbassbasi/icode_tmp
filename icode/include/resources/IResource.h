@@ -10,7 +10,7 @@
 #include "IStream.h"
 class IResource: public IObject {
 public:
-	IID_CLASS_PLATFORM(IResource,2,0);
+	IID_CLASS_PLATFORM(IResource,2,0)
 };
 
 #endif /* ICODE_INCLUDE_RESOURCES_IRESOURCE_H_ */

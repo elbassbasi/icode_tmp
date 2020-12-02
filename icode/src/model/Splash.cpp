@@ -6,7 +6,7 @@
  */
 
 #include "Splash.h"
-#include "Managers.h"
+#include "../core/Managers.h"
 Splash::Splash() {
 	this->progress_max = 0;
 	this->progress_i = 0;
@@ -44,15 +44,6 @@ void Splash::Create() {
 	SetTimer(500);
 }
 
-void Splash::UpdateLabelText(const char *format, ...) {
-	va_list args;
-	va_start(args, format);
-	vsnprintf(this->text, sizeof(this->text), format, args);
-	va_end(args);
-	this->update_text = true;
-	this->_Update();
-}
-
 bool Splash::OnPaint(WPaintEvent &e) {
 	WRect r;
 	GetClientArea(r);
@@ -64,7 +55,8 @@ bool Splash::OnPaint(WPaintEvent &e) {
 	e->DrawTextTransparent(this->text, r.x, r.height - 50);
 	e->SetFont(&this->font);
 	e->SetForeground(W_COLOR_BLUE);
-	e->DrawTextTransparent("ICode Editor", (r.x + r.width) / 2, (r.y + r.height) / 2);
+	e->DrawTextTransparent("ICode Editor", (r.x + r.width) / 2,
+			(r.y + r.height) / 2);
 	e->SetForeground(W_COLOR_WHITE);
 	e->SetFont(WToolkit::GetDefault()->GetSystemFont());
 	e->DrawTextTransparent("Intelligent code editor", (r.x + r.width) / 2,
@@ -74,7 +66,7 @@ bool Splash::OnPaint(WPaintEvent &e) {
 
 void Splash::LoadPlugins() {
 	Managers *managers = (Managers*) IManagers::Get();
-	managers->LoadPlugins();
+	managers->LoadPlugins(0);
 	this->progress_max = 20;
 	this->update_progress_max = true;
 	this->_Update();
@@ -82,7 +74,7 @@ void Splash::LoadPlugins() {
 		WThread::Sleep(1);
 		this->progress_i = i;
 		this->update_progress = true;
-		UpdateLabelText("Loading Plugin %d", i);
+		SetText("Loading Plugin %d", i);
 	}
 	this->update_finish = true;
 	this->_Update();
@@ -108,8 +100,9 @@ void Splash::OnUpdate() {
 	}
 	if (this->update_finish && finish == true) {
 		Managers *managers = (Managers*) IManagers::Get();
-		managers->AttachPlugins();
-		managers->StartPlugins();
+		managers->AttachPlugins(0);
+		managers->StartPlugins(0);
+		KillTimer();
 		this->Dispose();
 	}
 }
@@ -125,4 +118,50 @@ void Splash::_Update() {
 
 void Splash::Run() {
 	LoadPlugins();
+}
+//IProgressMonitorTask
+void Splash::Close() {
+}
+
+int Splash::GetTotal() {
+	return progress.GetMaximum();
+}
+
+WString Splash::GetText() {
+	return this->text;
+}
+
+bool Splash::IsCanceled() {
+	return false;
+}
+
+void Splash::SetCanceled(bool value) {
+}
+
+void Splash::SetTotal(int total) {
+	progress.SetMaximum(total);
+}
+
+void Splash::SetText(const char *format,...) {
+	va_list args;
+	va_start(args, format);
+	vsnprintf(this->text, sizeof(this->text), format, args);
+	va_end(args);
+	this->update_text = true;
+	this->_Update();
+}
+
+void Splash::Worked(int work) {
+	progress.SetSelection(work);
+}
+//IProgressMonitor
+IProgressMonitorTask* Splash::CreateTask(IProgressMonitorTask *parentTask) {
+	return this;
+}
+
+bool Splash::IsCanceledAll() {
+	return false;
+}
+
+void Splash::SetCanceledAll(bool value) {
 }
