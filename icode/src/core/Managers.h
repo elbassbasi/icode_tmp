@@ -11,7 +11,7 @@
 struct CommandItem {
 	CommandItem* next;
 	ICommand *command;
-	ushort idlength;
+	wushort idlength;
 	char id[0];
 };
 class Managers: public IManagers {

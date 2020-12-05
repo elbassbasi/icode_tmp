@@ -33,7 +33,7 @@ public:
 		ICommand *command;
 	};
 	int style;
-	ushort name_length;
+	wushort name_length;
 	char name[0];
 };
 class MenuManager {
@@ -49,9 +49,9 @@ public:
 private:
 	MenuManagerItem* CreateItem(const char *location);
 	MenuManagerItem* CreateItem(MenuManagerItem *parent, const char *text,
-			ushort length);
+			wushort length);
 	MenuManagerItem* FindItem(MenuManagerItem *parent, const char *text,
-			ushort length);
+			wushort length);
 	void CreateSubMenu(MenuManagerItem *firstchild, WMenuItem &_p);
 	void FreeChildren(MenuManagerItem *item);
 	void FreeItem(MenuManagerItem *item);

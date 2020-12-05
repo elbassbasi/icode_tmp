@@ -182,7 +182,7 @@ void DBConfig::GetChildren(WIterator<IConfig*> &children) {
 	 ((DBConfig_GetValues*) &children)->clazz = &DBConfig_GetValues_class;*/
 }
 
-IObject* DBConfig::QueryInterface(const IID interfaceId) {
+IObject* DBConfig::QueryInterface(IID interfaceId) {
 	return 0;
 }
 
@@ -312,24 +312,24 @@ int DBConfigValue::_GetValue(WValue &value) {
 }
 
 int DBConfigValue::_GetSize() {
-	uint sz = 0;
+	wuint sz = 0;
 	int ret;
 	switch (this->header.type) {
 	case W_VALUE_BOOL:
-	case W_VALUE_CHAR:
+	//case W_VALUE_CHAR:
 		sz = sizeof(char);
 		break;
 	case W_VALUE_INT:
 	case W_VALUE_FLOAT:
 		sz = sizeof(int);
 		break;
-	case W_VALUE_INT64:
+	//case W_VALUE_INT64:
 	case W_VALUE_DOUBLE:
 		sz = sizeof(double);
 		break;
 	case W_VALUE_POINTER:
 	case W_VALUE_STRING_REF:
-	case W_VALUE_UTF8: {
+	case W_VALUE_STRING_UTF8: {
 		if (this->header.value != 0) {
 			if (this->size == 0) {
 				ret = this->parent->manager->SeekRead(this->header.value, &sz,
@@ -371,7 +371,7 @@ int DBConfig::_OpenChild(const char *key, DBConfig **config, int flags) {
 	const char *k, *next = key;
 	DBConfig *s, *p = this;
 	DBConfigManager *manager = this->manager;
-	uint sz;
+	wuint sz;
 	int ret;
 	DBTreeHC h;
 	while (true) {

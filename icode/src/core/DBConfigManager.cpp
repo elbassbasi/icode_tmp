@@ -39,11 +39,11 @@ int DBConfigManager::GetRoot(IConfig **config) {
 }
 
 const char* DBConfigManager::NextName(const char *source, const char **key,
-		uint *size) {
+		wuint *size) {
 	if (*source == '\\' || *source == '/')
 		source++;
 	const char *s;
-	uint sz = 0;
+	wuint sz = 0;
 	*key = s = source;
 	while (s[sz] != 0 && s[sz] != '\\' && s[sz] != '/') {
 		sz++;
@@ -74,7 +74,7 @@ int DBConfigManager::FindH(const char *name, size_t sz, DBTreeH *h,
 		ret = ReadH(h, h_sz, tmp);
 		if (ret < 0)
 			return ret;
-		if ((uint) ret == sz && !strncmp(name, tmp, sz)) {
+		if ((wuint) ret == sz && !strncmp(name, tmp, sz)) {
 			return 1;
 		}
 		h->prev = h->page;
@@ -207,7 +207,7 @@ int DBConfigManager::FreeValueV(DBTreeHV *h) {
 		break;
 	case W_VALUE_POINTER:
 	case W_VALUE_STRING_REF:
-	case W_VALUE_UTF8:
+	case W_VALUE_STRING_UTF8:
 		if (h->value != 0) {
 			ret = this->FreeValueP(h->value);
 		}
@@ -218,26 +218,26 @@ int DBConfigManager::FreeValueV(DBTreeHV *h) {
 }
 int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 	int ret = 1;
-	uint sz;
+	wuint sz;
 	DBPage lastp;
-	switch (v.v.clazz->type) {
+	switch (v.clazz->type) {
 	case W_VALUE_UNKNOWN:
 		this->FreeValueV(h);
-		h->type = v.v.clazz->type;
+		h->type = v.clazz->type;
 		h->value = 0;
 		ret = this->SeekWrite(h->page, h->GetHeader(), h->GetSize());
 		break;
 	case W_VALUE_BOOL:
-	case W_VALUE_CHAR:
-	case W_VLAUE_SHORT:
+	//case W_VALUE_CHAR:
+	//case W_VLAUE_SHORT:
 	case W_VALUE_INT:
 	case W_VALUE_FLOAT:
 		this->FreeValueV(h);
-		h->value = v.v.INT64;
-		h->type = v.v.clazz->type;
+		h->value = v.INT64;
+		h->type = v.clazz->type;
 		ret = this->SeekWrite(h->page, h->GetHeader(), h->GetSize());
 		break;
-	case W_VALUE_INT64:
+	//case W_VALUE_INT64:
 	case W_VALUE_DOUBLE: {
 		lastp = h->value;
 		if (h->type != W_VALUE_INT64 && h->type != W_VALUE_DOUBLE) {
@@ -246,10 +246,10 @@ int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 		if (h->value == 0) {
 			ret = this->Alloc(&h->value, sizeof(double));
 			if (ret > 0) {
-				this->SeekWrite(h->value, &v.v.DOUBLE, sizeof(double));
+				this->SeekWrite(h->value, &v.DOUBLE, sizeof(double));
 				if (ret > 0) {
-					if (h->type != v.v.clazz->type || lastp != h->value) {
-						h->type = v.v.clazz->type;
+					if (h->type != v.clazz->type || lastp != h->value) {
+						h->type = v.clazz->type;
 						ret = this->SeekWrite(h->page, h->GetHeader(),
 								h->GetSize());
 					}
@@ -258,8 +258,8 @@ int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 				}
 			}
 		} else {
-			ret = this->SeekWrite(h->value, &v.v.DOUBLE, sizeof(double));
-			if (h->type != v.v.clazz->type) {
+			ret = this->SeekWrite(h->value, &v.DOUBLE, sizeof(double));
+			if (h->type != v.clazz->type) {
 				ret = this->SeekWrite(h->page, h->GetHeader(), h->GetSize());
 			}
 		}
@@ -267,16 +267,16 @@ int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 		break;
 	case W_VALUE_POINTER:
 	case W_VALUE_STRING_REF:
-	case W_VALUE_UTF8: {
+	case W_VALUE_STRING_UTF8: {
 		lastp = h->value;
-		if (v.v.clazz->type == W_VALUE_STRING_REF) {
-			w_string_ref* ref =(w_string_ref*) v.v.pointer;
+		if (v.clazz->type == W_VALUE_STRING_REF) {
+			w_string_ref* ref =(w_string_ref*) v.pointer;
 			sz = w_string_get_length(ref);
 		} else {
-			if (v.v.size == 0xffffff)
-				sz = strlen(v.v.string);
+			if (v.size == 0xffffff)
+				sz = strlen(v.string);
 			else
-				sz = v.v.size;
+				sz = v.size;
 		}
 		if (sz == 0) {
 			if (h->value != 0) {
@@ -288,17 +288,17 @@ int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 			if (ret > 0 && h->value != 0) {
 				ret = this->SeekWrite(h->value, &sz, sizeof(sz));
 				if (ret > 0) {
-					if (v.v.clazz->type == W_VALUE_STRING_REF) {
-						w_string_ref* ref =(w_string_ref*) v.v.pointer;
+					if (v.clazz->type == W_VALUE_STRING_REF) {
+						w_string_ref* ref =(w_string_ref*) v.pointer;
 						ret = this->Write(ref->data, sz);
 					} else
-						ret = this->Write(v.v.pointer, sz);
+						ret = this->Write(v.pointer, sz);
 				}
 
 			}
 		}
-		if (h->type != v.v.clazz->type || lastp != h->value) {
-			h->type = v.v.clazz->type;
+		if (h->type != v.clazz->type || lastp != h->value) {
+			h->type = v.clazz->type;
 			ret = this->SeekWrite(h->page, h->GetHeader(), h->GetSize());
 		}
 	}
@@ -308,7 +308,7 @@ int DBConfigManager::WriteValue(DBTreeHV *h, const WValue &v) {
 		break;
 	}
 	if (ret > 0) {
-		h->type = v.v.clazz->type;
+		h->type = v.clazz->type;
 		ret = this->SeekWrite(h->page, h->GetHeader(), h->GetSize());
 	}
 	return ret;
@@ -318,7 +318,7 @@ int DBConfigManager::ReadValue(DBTreeHV *h, WValue &v) {
 }
 
 int DBConfigManager::FreeValueP(DBPage p) {
-	uint sz;
+	wuint sz;
 	int ret = this->SeekRead(p, &sz, sizeof(sz));
 	if (ret > 0) {
 		ret = this->Free(p, sz);
@@ -326,9 +326,9 @@ int DBConfigManager::FreeValueP(DBPage p) {
 	return ret;
 }
 
-int DBConfigManager::ReAllocP(DBTreeHV *h, uint newsize) {
+int DBConfigManager::ReAllocP(DBTreeHV *h, wuint newsize) {
 	int ret;
-	uint sz;
+	wuint sz;
 	if (h->value == 0) {
 		ret = this->Alloc(&h->value, newsize);
 	} else {

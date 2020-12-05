@@ -143,9 +143,9 @@ int DB::FindPagesFromRmList(DBPage *block, int nbBlocks) {
 		ret = this->Read(&rm_blocks, sizeof(rm_blocks));
 		if (ret < 0)
 			return ret;
-		if ((rm_blocks.nbBlocks > (uint) nbBlocks
+		if ((rm_blocks.nbBlocks > (wuint) nbBlocks
 				&& (rm_blocks.nbBlocks - nbBlocks) >= min_block_rest)
-				|| rm_blocks.nbBlocks == (uint) nbBlocks) {
+				|| rm_blocks.nbBlocks == (wuint) nbBlocks) {
 			if (current_block == this->rm_list) {
 				ret = SeekWrite(0, 8, &rm_blocks.next, sizeof(DBPage));
 				if (ret < 0)
@@ -160,7 +160,7 @@ int DB::FindPagesFromRmList(DBPage *block, int nbBlocks) {
 				if (ret < 0)
 					return ret;
 			}
-			if (rm_blocks.nbBlocks != (uint) nbBlocks) {
+			if (rm_blocks.nbBlocks != (wuint) nbBlocks) {
 				ret = DeletePages(current_block + nbBlocks,
 						rm_blocks.nbBlocks - nbBlocks);
 				if (ret < 0)
@@ -175,7 +175,7 @@ int DB::FindPagesFromRmList(DBPage *block, int nbBlocks) {
 	return 1;
 }
 
-int DB::NewPages(DBPage *block, uint nbBlocks) {
+int DB::NewPages(DBPage *block, wuint nbBlocks) {
 	int ret;
 	if (this->rm_list == 0) {
 		return NewPagesFromEnd(block, nbBlocks);
@@ -187,7 +187,7 @@ int DB::NewPages(DBPage *block, uint nbBlocks) {
 	}
 }
 
-int DB::DeletePages(DBPage blocks, uint nbBlocks) {
+int DB::DeletePages(DBPage blocks, wuint nbBlocks) {
 	int ret;
 	struct DataBaseRmBlock rm_blocks;
 	if ((nbBlocks * this->pageSize) < sizeof(struct DataBaseRmBlock))
@@ -241,7 +241,7 @@ int DB::SeekToPage(DBPage block, int pos) {
 	return 1;
 }
 
-int DB::SeekRead(DBPage block, int pos, void *data, uint size) {
+int DB::SeekRead(DBPage block, int pos, void *data, wuint size) {
 	int ret = SeekToPage(block, pos);
 	if (ret < 0)
 		return ret;
@@ -249,7 +249,7 @@ int DB::SeekRead(DBPage block, int pos, void *data, uint size) {
 	return ret;
 }
 
-int DB::SeekWrite(DBPage block, int pos, const void *data, uint size) {
+int DB::SeekWrite(DBPage block, int pos, const void *data, wuint size) {
 	int ret = SeekToPage(block, pos);
 	if (ret < 0)
 		return ret;
@@ -257,7 +257,7 @@ int DB::SeekWrite(DBPage block, int pos, const void *data, uint size) {
 	return ret;
 }
 
-int DB::Read(void *data, uint size) {
+int DB::Read(void *data, wuint size) {
 	int ret = fread(data, 1, size, this->file.file);
 	if (ret >= 0) {
 		this->file_pos += ret;
@@ -284,7 +284,7 @@ int DB::SetRoot(DBPage root) {
 	return ret;
 }
 
-int DB::Write(const void *data, uint size) {
+int DB::Write(const void *data, wuint size) {
 	int ret = fwrite(data, 1, size, this->file.file);
 	if (ret >= 0) {
 		this->file_pos += ret;
@@ -295,7 +295,7 @@ int DB::Write(const void *data, uint size) {
 		return -1;
 	return ret;
 }
-int DB::Alloc(DBPage *block, uint size, uint *size_allocated) {
+int DB::Alloc(DBPage *block, wuint size, wuint *size_allocated) {
 	int nb_blocks = size / this->pageSize;
 	if (size % this->pageSize != 0)
 		nb_blocks++;
@@ -306,7 +306,7 @@ int DB::Alloc(DBPage *block, uint size, uint *size_allocated) {
 	return ret;
 }
 
-int DB::Free(DBPage blocks, uint size) {
+int DB::Free(DBPage blocks, wuint size) {
 	int nb_blocks = size / this->pageSize;
 	if (size % this->pageSize != 0)
 		nb_blocks++;
@@ -314,8 +314,8 @@ int DB::Free(DBPage blocks, uint size) {
 }
 
 
-int DB::Realloc(DBPage *pages, uint newsize, uint lastsize,
-		uint *size_allocated) {
+int DB::Realloc(DBPage *pages, wuint newsize, wuint lastsize,
+		wuint *size_allocated) {
 	int ret;
 	size_t nb_blocks_1 = newsize / this->pageSize;
 	if (newsize % this->pageSize != 0)

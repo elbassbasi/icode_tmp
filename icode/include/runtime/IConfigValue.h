@@ -58,7 +58,7 @@ public:
 	int SetValueCompressed(void *data, size_t size) {
 		WValue v;
 		v.SetUserPointer(data, size);
-		v.v.flags |= VALUE_COMPRESSED;
+		v.flags |= VALUE_COMPRESSED;
 		return SetValue(v);
 	}
 	int SetValue(const char *string) {
@@ -67,7 +67,7 @@ public:
 	int SetValueCompressed(const char *string) {
 		WValue v;
 		v.SetString(string);
-		v.v.flags |= VALUE_COMPRESSED;
+		v.flags |= VALUE_COMPRESSED;
 		return SetValue(v);
 	}
 	void Close(){

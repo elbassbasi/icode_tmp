@@ -81,7 +81,7 @@ public:
 	static DBConfig* Create(DBConfig* parent,DBConfig* prev,int name_length);
 	~DBConfig();
 	void Free();
-	IObject* QueryInterface(const IID interfaceId);
+	IObject* QueryInterface(IID interfaceId);
 	int IncRef();
 	int DecRef();
 	int Delete();
@@ -114,7 +114,7 @@ public:
 	IConfigListener *firstListener;
 	DBListeners *listeners;
 	int ref;
-	uint size;
+	wuint size;
 	DBTreeHV header;
 	unsigned char flags;
 	char name[0];

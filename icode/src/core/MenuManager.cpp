@@ -110,7 +110,7 @@ MenuManagerItem* MenuManager::CreateItem(const char *location) {
 	}
 }
 MenuManagerItem* MenuManager::CreateItem(MenuManagerItem *parent,
-		const char *text, ushort length) {
+		const char *text, wushort length) {
 	MenuManagerItem *item = (MenuManagerItem*) malloc(
 			sizeof(MenuManagerItem) + length + 1);
 	if (item == 0)
@@ -126,7 +126,7 @@ MenuManagerItem* MenuManager::CreateItem(MenuManagerItem *parent,
 }
 
 MenuManagerItem* MenuManager::FindItem(MenuManagerItem *parent,
-		const char *text, ushort length) {
+		const char *text, wushort length) {
 	MenuManagerItem *dir, *last = 0;
 	dir = (MenuManagerItem*) parent->first;
 	int i;

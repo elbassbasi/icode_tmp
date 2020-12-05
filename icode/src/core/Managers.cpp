@@ -276,7 +276,7 @@ bool Managers::RegistreCommand(const char *id, ICommand *command) {
 	if (id == 0 || command == 0)
 		return false;
 	CommandItem *commands = this->commands, *last = 0;
-	ushort length = strlen(id);
+	wushort length = strlen(id);
 	while (commands != 0) {
 		if (length == commands->idlength) {
 			if (!strcmp(commands->id, id)) {
@@ -306,7 +306,7 @@ ICommand* Managers::FindCommand(const char *id) {
 	if (id == 0)
 		return 0;
 	CommandItem *commands = this->commands, *last = 0;
-	ushort length = strlen(id);
+	wushort length = strlen(id);
 	while (commands != 0) {
 		if (length == commands->idlength) {
 			if (!strcmp(commands->id, id)) {

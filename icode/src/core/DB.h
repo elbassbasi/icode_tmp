@@ -26,8 +26,8 @@ private:
 	int WriteEnd(unsigned int sz);
 	int NewPagesFromEnd(DBPage *block, int nbpages);
 	int FindPagesFromRmList(DBPage *block, int nbpages);
-	int NewPages(DBPage *block, uint nbpages);
-	int DeletePages(DBPage blocks, uint nbpages);
+	int NewPages(DBPage *block, wuint nbpages);
+	int DeletePages(DBPage blocks, wuint nbpages);
 public:
 	DB();
 	~DB();
@@ -36,14 +36,14 @@ public:
 	int OpenFileRO(const char *filename);
 	int CreateFile(const char *filename, int blockSize = 0);
 	bool IsOpened();
-	int Alloc(DBPage *pages, uint size, uint *size_allocated);
-	int Alloc(DBPage *pages, uint size) {
+	int Alloc(DBPage *pages, wuint size, wuint *size_allocated);
+	int Alloc(DBPage *pages, wuint size) {
 		return Alloc(pages, size, 0);
 	}
-	int Free(DBPage pages, uint size);
-	int Realloc(DBPage *pages, uint newsize, uint lastsize,
-			uint *size_allocated);
-	int Realloc(DBPage *pages, uint newsize, uint lastsize) {
+	int Free(DBPage pages, wuint size);
+	int Realloc(DBPage *pages, wuint newsize, wuint lastsize,
+			wuint *size_allocated);
+	int Realloc(DBPage *pages, wuint newsize, wuint lastsize) {
 		return Realloc(pages, newsize, lastsize, 0);
 	}
 	int GetRoot(DBPage *root);
@@ -52,16 +52,16 @@ public:
 	int SeekToPage(DBPage block){
 		return SeekToPage(block,0);
 	}
-	int SeekRead(DBPage block, int pos, void *data, uint size);
-	int SeekRead(DBPage block, void *data, uint size){
+	int SeekRead(DBPage block, int pos, void *data, wuint size);
+	int SeekRead(DBPage block, void *data, wuint size){
 		return SeekRead(block,0,data,size);
 	}
-	int SeekWrite(DBPage block, int pos, const void *data, uint size);
-	int SeekWrite(DBPage block, const void *data, uint size){
+	int SeekWrite(DBPage block, int pos, const void *data, wuint size);
+	int SeekWrite(DBPage block, const void *data, wuint size){
 		return SeekWrite(block,0,data,size);
 	}
-	int Read(void *data, uint size);
-	int Write(const void *data, uint size);
+	int Read(void *data, wuint size);
+	int Write(const void *data, wuint size);
 	void Lock() {
 		lock.Lock();
 	}

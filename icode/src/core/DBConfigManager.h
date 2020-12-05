@@ -20,7 +20,7 @@ public:
 	int GetRoot(IConfig **config);
 public:
 	static const char* NextName(const char *source, const char **key,
-			uint *size);
+			wuint *size);
 	int ReadH(DBTreeH *h, size_t h_sz, char *name);
 	int FindH(const char *name, size_t sz, DBTreeH *h, size_t h_sz);
 	int CreateHC(const char *name, DBTreeHC *h);
@@ -37,7 +37,7 @@ public:
 	int ReadValue(DBTreeHV *h, WValue &v);
 	int FreeValueP(DBPage p);
 	int FreeValueV(DBTreeHV *h);
-	int ReAllocP(DBTreeHV *h,uint newsize);
+	int ReAllocP(DBTreeHV *h,wuint newsize);
 public:
 	void Test();
 };

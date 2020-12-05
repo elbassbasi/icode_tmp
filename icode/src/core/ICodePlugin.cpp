@@ -15,12 +15,12 @@ public:
 	PerspectiveInit init;
 	int image;
 	int id;
-	ushort name_length;
+	wushort name_length;
 	char name[0];
 };
 struct ViewItem: public BasicLink {
 	ViewHandler handler;
-	ushort name_length;
+	wushort name_length;
 	char name[0];
 };
 const char *ICodePluginImpl_icons[] = { "fldr.png", "file.png" };
@@ -93,7 +93,7 @@ public:
 	}
 	int RegistrePerspective(const char *name, int image, PerspectiveInit init,
 			int flags) {
-		ushort length = strlen(name);
+		wushort length = strlen(name);
 		PerspectiveItem *item = (PerspectiveItem*) malloc(
 				sizeof(PerspectiveItem) + length + 1);
 		if (item == 0)
@@ -109,7 +109,7 @@ public:
 	}
 
 	void OpenPerspective(MWindow *parent, const char *name) {
-		ushort length = strlen(name);
+		wushort length = strlen(name);
 		PerspectiveItem *item = (PerspectiveItem*) perspectives.first, *i = 0;
 		while (item != 0) {
 			if (length == item->name_length) {
@@ -130,7 +130,7 @@ public:
 	int RegistreView(const char *name, ViewHandler handler) {
 		if (handler == 0)
 			return 0;
-		ushort length = strlen(name);
+		wushort length = strlen(name);
 		ViewItem *item = (ViewItem*) malloc(sizeof(ViewItem) + length + 1);
 		if (item == 0)
 			return 0;
@@ -143,7 +143,7 @@ public:
 	}
 
 	IViewPart* CreateView(const char *id) {
-		ushort length = strlen(id);
+		wushort length = strlen(id);
 		ViewItem *item = (ViewItem*) views.first;
 		while (item != 0) {
 			if (length == item->name_length) {

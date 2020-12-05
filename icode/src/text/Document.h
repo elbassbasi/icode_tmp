@@ -11,9 +11,9 @@
 class DocumentLine: public BasicLink {
 public:
 	friend class Document;
-	ushort alloc;
-	ushort length;
-	ushort unicode_length;
+	wushort alloc;
+	wushort length;
+	wushort unicode_length;
 	char *data;
 	void *user_data[0];
 };
